@@ -1,18 +1,25 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import AdminPanel from "./pages/AdminPanel";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import LoginForm from "./components/LoginForm";
+import Dashboard from "./components/Dashboard";
 
 function App() {
-  return (
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminPanel />} />
-        </Routes>
-      </Router>
-  );
+    const [user, setUser] = useState(null);
+
+    return (
+        <Router>
+            <Routes>
+                <Route
+                    path="/"
+                    element={user ? <Navigate to="/dashboard" /> : <LoginForm onLogin={setUser} />}
+                />
+                <Route
+                    path="/dashboard"
+                    element={user ? <Dashboard /> : <Navigate to="/" />}
+                />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
