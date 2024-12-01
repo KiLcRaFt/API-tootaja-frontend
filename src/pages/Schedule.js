@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { updateSchedule } from "../services/api";
+import { updateSchedule } from "../services/auth";
 
 function Schedule() {
     const [schedule, setSchedule] = useState({ date: "", start: "", end: "" });

@@ -12,11 +12,16 @@ const LoginForm = ({ onLogin }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        console.log("Отправляем данные для входа:", { Email: credentials.Email, Password: credentials.Password });
+
         try {
-            const user = await login(credentials); // Передаем объект с Email и Password
-            onLogin(user); // Вызываем функцию onLogin с данными пользователя
-        } catch (err) {
-            setError("Invalid username or password");
+            const user = await login({ Email: e.Email, Password: e.Password }); // Передача данных
+            console.log("Ответ сервера:", user); // Проверка данных пользователя
+            alert("Успешная авторизация!");
+        } catch (error) {
+            console.error("Ошибка авторизации:", error.response?.data || error.message); // Покажите ошибку
+            alert("Ошибка авторизации: такого пользователя нет!");
         }
     };
 

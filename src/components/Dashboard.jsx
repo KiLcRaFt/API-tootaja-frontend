@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { validateToken, logout } from "../services/auth";
+import {logout, validateSession} from "../services/auth";
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -8,7 +8,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const userData = await validateToken();
+                const userData = await validateSession();
                 setUser(userData);
             } catch (err) {
                 setError("Session expired. Please log in again.");

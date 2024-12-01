@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getEmployees } from "../services/api";
+import { getEmployees } from "../services/auth";
 
 function AdminPanel() {
     const [employees, setEmployees] = useState([]);

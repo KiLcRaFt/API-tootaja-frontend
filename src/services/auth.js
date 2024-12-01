@@ -1,34 +1,32 @@
 import API from "./api";
-import jwt_decode from "jwt-decode";
-
 export const login = async (credentials) => {
-    // Используем параметры из объекта credentials для формирования query string
     const { Email, Password } = credentials;
 
-    const response = await API.post(`/auth/login?Email=${encodeURIComponent(Email)}&Password=${encodeURIComponent(Password)}`);
+    // Отправляем запрос на вход
+    const response = await API.post(`/auth/login`, { Email, Password });
 
-    const { token } = response.data; // Предполагаем, что сервер возвращает токен
-    localStorage.setItem("token", token); // Сохраняем токен в localStorage
-    const user = jwt_decode(token); // Декодируем токен для получения данных пользователя
-    return user; // Возвращаем информацию о пользователе
+    // Получаем ответ с информацией о пользователе
+    const user = response.data; // Сервер возвращает информацию о пользователе
+    localStorage.setItem("user", JSON.stringify(user)); // Сохраняем пользователя в localStorage
+
+    return user; // Возвращаем данные пользователя
 };
 
-
-
-export const validateToken = async () => {
-    const token = localStorage.getItem("token"); // Извлекаем токен из localStorage
-    if (!token) throw new Error("No token found");
-
+export const validateSession = async () => {
     try {
-        // Передаем токен в тело запроса
-        const response = await API.post("/auth/validate-token2", { token });
-        return response.data; // Возвращаем результат валидации
+        // Отправляем запрос на проверку сессии
+        const response = await API.get("/auth/validate-session");
+
+        // Если сессия действительна, возвращаем данные пользователя
+        return response.data;
     } catch (error) {
-        localStorage.removeItem("token"); // Удаляем токен, если сервер возвращает ошибку
+        // Если сессия недействительна, удаляем данные из localStorage
+        localStorage.removeItem("user");
         throw error;
     }
 };
 
-export const logout = () => {
-    localStorage.removeItem("token"); // Удаляем токен из localStorage
+export const logout = async () => {
+    await API.post("/auth/logout"); // Вызываем серверный метод для выхода
+    localStorage.removeItem("user"); // Удаляем данные пользователя из localStorage
 };
